@@ -296,6 +296,43 @@
     </div>
   </div>
 
+  
+  <!-- Formspree Submit -->
+  <div class="card" style="margin-top:0;">
+    <div class="step-badge" style="margin-bottom:1rem;">Step 3 — Submit to your coach</div>
+    <p style="font-size:16px; color:var(--color-text-secondary); margin-bottom:1.25rem; line-height:1.65;">
+      When you're done, submit your results directly to your coach. Include your name and any notes you'd like to share.
+    </p>
+    <form action="https://formspree.io/f/xrevlqvv" method="POST" id="wheelForm">
+      <input type="hidden" name="tool" value="Wheel of Life" />
+      <input type="hidden" name="overall_score" id="submit_score" value="" />
+      <input type="hidden" name="finances" id="submit_finances" value="" />
+      <input type="hidden" name="relationships" id="submit_relationships" value="" />
+      <input type="hidden" name="health" id="submit_health" value="" />
+      <input type="hidden" name="fun" id="submit_fun" value="" />
+      <input type="hidden" name="home" id="submit_home" value="" />
+      <input type="hidden" name="personal_growth" id="submit_personal_growth" value="" />
+      <input type="hidden" name="work" id="submit_work" value="" />
+      <input type="hidden" name="other" id="submit_other" value="" />
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+        <div>
+          <label style="font-size:13px; color:var(--color-text-secondary); display:block; margin-bottom:4px;">Your name</label>
+          <input type="text" name="client_name" required placeholder="Full name" style="width:100%; font-size:16px; padding:8px 10px; border:0.5px solid var(--color-border-secondary); border-radius:8px; background:var(--color-background-primary); color:var(--color-text-primary); outline:none;" />
+        </div>
+        <div>
+          <label style="font-size:13px; color:var(--color-text-secondary); display:block; margin-bottom:4px;">Your email</label>
+          <input type="email" name="email" required placeholder="your@email.com" style="width:100%; font-size:16px; padding:8px 10px; border:0.5px solid var(--color-border-secondary); border-radius:8px; background:var(--color-background-primary); color:var(--color-text-primary); outline:none;" />
+        </div>
+      </div>
+      <div style="margin-bottom:1rem;">
+        <label style="font-size:13px; color:var(--color-text-secondary); display:block; margin-bottom:4px;">Notes for your coach (optional)</label>
+        <textarea name="notes" placeholder="Anything you'd like your coach to know about your results..." style="width:100%; min-height:80px; font-size:16px; padding:8px 10px; border:0.5px solid var(--color-border-secondary); border-radius:8px; background:var(--color-background-primary); color:var(--color-text-primary); resize:vertical; outline:none; font-family:inherit;"></textarea>
+      </div>
+      <button type="submit" onclick="prepareWheelSubmit()" style="display:block; width:100%; background:linear-gradient(135deg,#6B7A3E,#8A6E3E); color:white; font-size:16px; font-weight:600; padding:12px; border:none; border-radius:8px; cursor:pointer; font-family:inherit;">Submit to Coach →</button>
+      <div id="wheelSuccess" style="display:none; margin-top:1rem; padding:12px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; color:#166534; font-size:14px; text-align:center;">✓ Submitted successfully! Your coach will be in touch.</div>
+    </form>
+  </div>
+
   <p class="page-footer">Grounded Finance &nbsp;·&nbsp; groundedfinance.com</p>
 </div>
 
@@ -533,6 +570,33 @@
   renderPrompts();
   draw();
 })();
+
+  // Populate hidden fields before submit
+  function prepareWheelSubmit() {
+    const cats = ['finances','relationships','health','fun','home','personal_growth','work','other'];
+    cats.forEach((c, i) => {
+      const el = document.getElementById('submit_' + c);
+      if (el) el.value = vals[i] + '/10';
+    });
+    document.getElementById('submit_score').value = (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1) + '/10';
+  }
+  document.getElementById('wheelForm').addEventListener('submit', function(e) {
+    prepareWheelSubmit();
+  });
+  document.getElementById('wheelForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = e.target;
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    }).then(r => {
+      if (r.ok) {
+        document.getElementById('wheelSuccess').style.display = 'block';
+        form.reset();
+      }
+    });
+  });
 </script>
 </body>
 </html>

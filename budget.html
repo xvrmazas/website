@@ -235,6 +235,35 @@ textarea:focus { border-color: var(--accent); }
 
   <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
 </div>
+
+  <!-- Formspree Submit -->
+  <div style="background:var(--bg); border:0.5px solid var(--border); border-radius:var(--radius-lg); padding:1.5rem; margin-top:1.5rem;">
+    <p style="font-size:11px; font-weight:500; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.07em; margin-bottom:1rem; padding-bottom:8px; border-bottom:0.5px solid var(--border);">Submit to Your Coach</p>
+    <p style="font-size:16px; color:var(--text-secondary); margin-bottom:1.25rem; line-height:1.65;">When complete, submit your assessment directly to your coach for review before your session.</p>
+    <form action="https://formspree.io/f/xnjyzdye" method="POST" id="fnaForm">
+      <input type="hidden" name="tool" value="Financial Needs Assessment" />
+      <input type="hidden" name="grand_monthly_income" id="fs_income" value="" />
+      <input type="hidden" name="grand_monthly_expenses" id="fs_expenses" value="" />
+      <input type="hidden" name="monthly_net" id="fs_net" value="" />
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+        <div>
+          <label style="font-size:13px; color:var(--text-secondary); display:block; margin-bottom:4px;">Your name</label>
+          <input type="text" name="client_name" required placeholder="Full name" style="width:100%; font-size:16px; padding:8px 10px; border:0.5px solid var(--border-strong); border-radius:var(--radius-md); background:var(--bg); color:var(--text-primary); outline:none;" />
+        </div>
+        <div>
+          <label style="font-size:13px; color:var(--text-secondary); display:block; margin-bottom:4px;">Your email</label>
+          <input type="email" name="email" required placeholder="your@email.com" style="width:100%; font-size:16px; padding:8px 10px; border:0.5px solid var(--border-strong); border-radius:var(--radius-md); background:var(--bg); color:var(--text-primary); outline:none;" />
+        </div>
+      </div>
+      <div style="margin-bottom:1rem;">
+        <label style="font-size:13px; color:var(--text-secondary); display:block; margin-bottom:4px;">Notes for your coach (optional)</label>
+        <textarea name="notes" placeholder="Anything you'd like your coach to know..." style="width:100%; min-height:80px; font-size:16px; padding:8px 10px; border:0.5px solid var(--border-strong); border-radius:var(--radius-md); background:var(--bg); color:var(--text-primary); resize:vertical; outline:none; font-family:inherit;"></textarea>
+      </div>
+      <button type="submit" style="display:block; width:100%; background:linear-gradient(135deg,#6B7A3E,#8A6E3E); color:white; font-size:16px; font-weight:600; padding:12px; border:none; border-radius:var(--radius-md); cursor:pointer; font-family:inherit;">Submit to Coach →</button>
+      <div id="fnaSuccess" style="display:none; margin-top:1rem; padding:12px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; color:#166534; font-size:14px; text-align:center;">✓ Submitted successfully! Your coach will be in touch.</div>
+    </form>
+  </div>
+
 <p class="fna-footer">Grounded Finance &nbsp;·&nbsp; groundedfinance.com</p>
 </div>
 
@@ -267,6 +296,22 @@ textarea:focus { border-color: var(--accent); }
   document.querySelectorAll('.inc,.exp').forEach(el=>el.addEventListener('input',recalc));
   recalc();
 })();
+
+  document.getElementById('fnaForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    document.getElementById('fs_income').value = document.getElementById('grand-inc').textContent;
+    document.getElementById('fs_expenses').value = document.getElementById('grand-exp').textContent;
+    document.getElementById('fs_net').value = document.getElementById('grand-net').textContent;
+    fetch(e.target.action, {
+      method: 'POST',
+      body: new FormData(e.target),
+      headers: { 'Accept': 'application/json' }
+    }).then(r => {
+      if (r.ok) {
+        document.getElementById('fnaSuccess').style.display = 'block';
+      }
+    });
+  });
 </script>
 </body>
 </html>

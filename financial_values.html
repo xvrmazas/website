@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Financial Values Matrix — Grounded Finance</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #ffffff;
+      --bg2: #f3f4f6;
+      --border: rgba(0,0,0,0.09);
+      --border-strong: rgba(0,0,0,0.18);
+      --text-primary: #111827;
+      --text-secondary: #6b7280;
+      --text-tertiary: #9ca3af;
+      --accent: #6E8A6E; /* High Visibility Sage Green Primary */
+      --accent-light: #EBF2EB; /* Soft Light Sage Background */
+      --radius-md: 8px;
+      --radius-lg: 14px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #111827;
+        --bg2: #1a2233;
+        --border: rgba(255,255,255,0.09);
+        --border-strong: rgba(255,255,255,0.18);
+        --text-primary: #f9fafb;
+        --text-secondary: #9ca3af;
+        --text-tertiary: #6b7280;
+        --accent: #8FAD8F; /* Clear Sage theme adjustments for dark mode */
+        --accent-light: #203020;
+      }
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg2);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 2.5rem 1rem 5rem;
+    }
+
+    .page { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .card {
+      background: var(--bg);
+      border-radius: var(--radius-lg);
+      border: 0.5px solid var(--border);
+      padding: 2.25rem 2rem;
+    }
+
+    .brand {
+      text-align: center;
+      margin-bottom: 0.25rem;
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    .page-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 40px;
+      text-align: center;
+      color: var(--text-primary);
+      margin-bottom: 0.3rem;
+    }
+
+    .page-sub {
+      font-size: 16px;
+      text-align: center;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin-bottom: 1.75rem;
+    }
+
+    .step-badge {
+      display: inline-flex;
+      align-items: center;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      padding: 6px 14px;
+      border-radius: 99px;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+
+    .category-section { margin-bottom: 1.5rem; }
+    .category-title {
+      font-size: 14px; font-weight: 500; color: var(--text-secondary);
+      text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border); padding-bottom: 4px;
+    }
+
+    .matrix-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+    }
+    @media (max-width: 768px) { .matrix-grid { grid-template-columns: 1fr; } }
+
+    .fin-btn {
+      padding: 1rem; font-family: 'DM Sans', sans-serif; font-size: 16px;
+      font-weight: 500; text-align: left; border-radius: var(--radius-md);
+      border: 0.5px solid var(--border); background: var(--bg); color: var(--text-secondary);
+      cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; gap: 4px;
+    }
+    .fin-btn strong { color: var(--text-primary); font-weight: 500; }
+    .fin-btn span { font-size: 13px; font-weight: 400; color: var(--text-tertiary); line-height: 1.4; }
+    .fin-btn:hover { background: var(--bg2); border-color: var(--border-strong); }
+    
+    /* ── HIGH VISIBILITY FINANCIAL ACTIVE MATRIX SAGE BUTTONS ── */
+    .fin-btn.selected-stage1 { 
+      border-color: var(--accent); 
+      background: var(--accent-light); 
+      box-shadow: inset 0 0 0 1px rgba(110,138,110,0.2);
+    }
+    .fin-btn.selected-stage2 { 
+      border-color: var(--accent); 
+      background: var(--accent-light); 
+      box-shadow: inset 0 0 0 2px rgba(110,138,110,0.3);
+    }
+    .fin-btn.selected-stage3 { 
+      border-color: var(--accent); 
+      background: var(--accent-light); 
+      box-shadow: 0 0 0 2px var(--accent);
+    }
+    .fin-btn.selected-stage1 strong, .fin-btn.selected-stage2 strong, .fin-btn.selected-stage3 strong { color: var(--text-primary); font-weight: bold; }
+    .fin-btn.selected-stage1 span, .fin-btn.selected-stage2 span, .fin-btn.selected-stage3 span { color: var(--text-secondary); opacity: 0.95; }
+
+    .fin-btn.disabled { opacity: 0.25; cursor: not-allowed; }
+
+    .counter-text { text-align: center; font-size: 15px; color: var(--text-secondary); margin-top: 1.5rem; font-weight: 500; }
+    .reset-btn { display: inline-block; background: transparent; border: none; color: var(--text-tertiary); font-size: 13px; text-decoration: underline; cursor: pointer; margin-left: 10px; }
+    .reset-btn:hover { color: var(--text-secondary); }
+    .divider { border: none; border-top: 0.5px solid var(--border); margin: 1.5rem 0; }
+
+    .action-btn {
+      display: block; margin: 1rem auto 0; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 500;
+      background: var(--accent); border: none; border-radius: var(--radius-md); padding: 10px 24px; color: #ffffff; cursor: pointer; transition: opacity 0.15s;
+    }
+    .action-btn:hover { opacity: 0.9; }
+
+    .prompts { display: flex; flex-direction: column; gap: 16px; }
+    .prompt-card {
+      background: var(--bg2); border: 0.5px solid var(--border); border-left: 4px solid var(--accent); border-radius: 0 var(--radius-lg) var(--radius-lg) 0; padding: 1.25rem;
+    }
+    .prompt-header { font-size: 13px; font-weight: 500; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+    .prompt-q { font-size: 16px; color: var(--text-primary); line-height: 1.65; margin-bottom: 12px; font-weight: 500; }
+    .prompt-area {
+      width: 100%; min-height: 80px; font-size: 16px; line-height: 1.5; font-family: 'DM Sans', sans-serif; color: var(--text-primary);
+      background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 10px; resize: vertical; outline: none;
+    }
+    .prompt-area:focus { border-color: var(--accent); }
+
+    .empty-state { text-align: center; color: var(--text-tertiary); font-size: 16px; padding: 2rem 0; }
+    .page-footer { text-align: center; font-size: 14px; color: var(--text-tertiary); padding-top: 0.5rem; }
+
+    /* ── PRINT MEDIA RULES ── */
+    @page { size: letter; margin: 20mm 15mm 20mm 15mm; }
+    @media print {
+      html, body { background: #ffffff !important; color: #111827 !important; font-size: 12pt !important; min-height: auto !important; padding: 0 !important; margin: 0 !important; }
+      @page { margin-top: 15mm; margin-bottom: 15mm; }
+      .page { max-width: 100% !important; width: 100% !important; display: block !important; gap: 0 !important; }
+      .card:first-of-type, .step-badge, .category-section, .counter-text, .action-btn, .divider, .empty-state { display: none !important; }
+      .prompts::before {
+        content: "GROUNDED FINANCE \A Financial Values Allocation Blueprint Workbook \A";
+        white-space: pre-wrap; display: block; text-align: center; font-family: 'DM Sans', sans-serif; font-size: 11pt; font-weight: 500; letter-spacing: 0.1em; color: #6E8A6E !important; margin-bottom: 2rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 1rem;
+      }
+      .card:last-of-type { border: none !important; padding: 0 !important; background: transparent !important; }
+      .card:last-of-type .step-badge { display: none !important; }
+      .card:last-of-type p { font-size: 11pt !important; margin-bottom: 2.5rem !important; color: #4b5563 !important; }
+      .prompt-card { background: #ffffff !important; border: 1px solid #e5e7eb !important; border-left: 4px solid #6E8A6E !important; padding: 1.5rem !important; margin-bottom: 2rem !important; page-break-inside: avoid !important; border-radius: 4px !important; }
+      .prompt-header { font-size: 10pt !important; color: #6E8A6E !important; font-weight: bold !important; }
+      .prompt-q { font-size: 12pt !important; color: #111827 !important; margin-bottom: 1.5rem !important; }
+      .prompt-area { border: none !important; border-bottom: 1px dashed #9ca3af !important; background: transparent !important; width: 100% !important; height: 120px !important; min-height: 120px !important; padding: 0 !important; resize: none !important; display: block !important; }
+      .page-footer { display: block !important; position: fixed !important; bottom: 0 !important; width: 100% !important; text-align: center !important; font-size: 9pt !important; color: #9ca3af !important; border-top: 0.5px solid #e5e7eb; padding-top: 8px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="card">
+    <p class="brand">Grounded Finance</p>
+    <h1 class="page-title">Financial Values Blueprint</h1>
+    <p class="page-sub">Systematically narrow down the principles driving your wealth defense and investment logic.</p>
+
+    <div class="step-badge" id="stepIndicator">Stage 1 — Select exactly 12 Capital Drivers</div>
+    
+    <div id="matrixContainer"></div>
+    <p class="counter-text" id="counterText">Selected: 0 of 12 <button class="reset-btn" id="resetBtn" style="display:none;" onclick="resetFramework()">Reset Blueprint</button></p>
+  </div>
+
+  <div class="card">
+    <div class="step-badge">Sovereign Asset & Allocation Audit</div>
+    <p style="font-size:16px; color:var(--text-secondary); line-height:1.65; margin-bottom:1.5rem;">
+      Evaluate how your primary remaining financial principles dictate allocation limits, systematic risk controls, and system rules.
+    </p>
+
+    <div class="prompts" id="promptsContainer">
+      <div class="empty-state">Complete the multi-stage filtration framework above to reveal your tactical asset matrix.</div>
+    </div>
+
+    <hr class="divider" />
+    <button class="action-btn" onclick="window.print()">Save / Print Record</button>
+  </div>
+
+  
+    <!-- Formspree Submit -->
+    <div class="card" style="margin-top:0;">
+      <div class="step-badge" style="margin-bottom:1rem;">Submit to Your Coach</div>
+      <p style="font-size:16px; color:var(--text-secondary); margin-bottom:1.25rem; line-height:1.65;">
+        Once you've identified your top 3 financial anchors, submit your results to your coach.
+      </p>
+      <form action="https://formspree.io/f/mzdqvrlg" method="POST" id="fvForm">
+        <input type="hidden" name="tool" value="Financial Values Matrix" />
+        <input type="hidden" name="top_3_anchors" id="fs_fv_anchors" value="" />
+        <input type="hidden" name="stage1_selections" id="fs_fv_stage1" value="" />
+        <input type="hidden" name="stage2_selections" id="fs_fv_stage2" value="" />
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+          <div>
+            <label style="font-size:13px; color:var(--text-secondary); display:block; margin-bottom:4px;">Your name</label>
+            <input type="text" name="client_name" required placeholder="Full name" style="width:100%; font-size:16px; padding:8px 10px; border:0.5px solid var(--border-strong); border-radius:var(--radius-md); background:var(--bg); color:var(--text-primary); outline:none;" />
+          </div>
+          <div>
+            <label style="font-size:13px; color:var(--text-secondary); display:block; margin-bottom:4px;">Your email</label>
+            <input type="email" name="email" required placeholder="your@email.com" style="width:100%; font-size:16px; padding:8px 10px; border:0.5px solid var(--border-strong); border-radius:var(--radius-md); background:var(--bg); color:var(--text-primary); outline:none;" />
+          </div>
+        </div>
+        <div style="margin-bottom:1rem;">
+          <label style="font-size:13px; color:var(--text-secondary); display:block; margin-bottom:4px;">Notes for your coach (optional)</label>
+          <textarea name="notes" placeholder="Share any reflections on your financial anchors..." style="width:100%; min-height:80px; font-size:16px; padding:8px 10px; border:0.5px solid var(--border-strong); border-radius:var(--radius-md); background:var(--bg); color:var(--text-primary); resize:vertical; outline:none; font-family:inherit;"></textarea>
+        </div>
+        <button type="submit" style="display:block; width:100%; background:var(--accent); color:white; font-size:16px; font-weight:600; padding:12px; border:none; border-radius:var(--radius-md); cursor:pointer; font-family:inherit;">Submit to Coach →</button>
+        <div id="fvSuccess" style="display:none; margin-top:1rem; padding:12px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; color:#166534; font-size:14px; text-align:center;">✓ Submitted successfully! Your coach will be in touch.</div>
+      </form>
+    </div>
+
+<p class="page-footer">Grounded Finance &nbsp;·&nbsp; groundedfinance.com</p>
+</div>
+
+<script>
+(function () {
+  const financialValuesData = [
+    { category: 'Core Mindset Values', name: 'Abundance Mindset', desc: 'Believe in unlimited opportunities for wealth creation.', q: 'What scarcity narrative still triggers defensive or emotional choices on your balance sheet?' },
+    { category: 'Core Mindset Values', name: 'Long-term Thinking', desc: 'Focus on horizons measured in decades, not short months.', q: 'Where are you optimizing for immediate quarterly feedback instead of multi-decade compound gains?' },
+    { category: 'Core Mindset Values', name: 'Continuous Learning', desc: 'Constantly improve your financial knowledge and skills.', q: 'What financial variable or asset class do you currently understand least, but need to master next?' },
+    { category: 'Core Mindset Values', name: 'Delayed Gratification', desc: 'Choose long-term structural wealth over immediate consumption.', q: 'What specific lifestyle upgrade are you actively deferring to clear runway for capital growth?' },
+    { category: 'Core Mindset Values', name: 'Financial Discipline', desc: 'Stick to budget baselines and deployment paths consistently.', q: 'What structural automation parameter is missing to shield your allocation from human error?' },
+    { category: 'Core Mindset Values', name: 'Growth Orientation', desc: 'View macroeconomic shifts or challenges as opportunities.', q: 'How can you reposition your capital configuration to capture upside from the next systemic shift?' },
+    
+    { category: 'Wealth Building Principles', name: 'Live Below Your Means', desc: 'Ensure you spend less than your system generates, always.', q: 'What baseline expense tier is completely non-essential and safely targeted for elimination?' },
+    { category: 'Wealth Building Principles', name: 'Pay Yourself First', desc: 'Prioritize investment cash flows before any lifestyle costs.', q: 'What fixed percentage of top-line revenue is swept out to investment accounts automatically?' },
+    { category: 'Wealth Building Principles', name: 'Compound Interest Focus', desc: 'Harness the pure power of time and regular velocity.', q: 'Are you leaving positions untouched long enough to enter their high-leverage growth phase?' },
+    { category: 'Wealth Building Principles', name: 'Diversification', desc: 'Distribute systematic risk across unconnected allocations.', q: 'Which asset concentrations on your balance sheet expose you to a single point of failure?' },
+    { category: 'Wealth Building Principles', name: 'Emergency Preparedness', desc: 'Isolate 3–6 months of complete runway in pristine cash reserves.', q: 'Does your liquidity buffer live in an account structurally distinct from standard operating cash?' },
+    { category: 'Wealth Building Principles', name: 'Debt Elimination', desc: 'Systematically erase toxic liability before pursuing yield.', q: 'What liability balance or high-cost debt requires aggressive capital concentration right now?' },
+    
+    { category: 'Investment Philosophy', name: 'Value Creation', desc: 'Concentrate capital on assets that produce active yield or appreciate.', q: 'What percentage of your capital asset layout produces consistent cash flow versus speculative appreciation?' },
+    { category: 'Investment Philosophy', name: 'Risk Management', desc: 'Strictly balance macro target returns against downside parameters.', q: 'What is your maximum acceptable drawdown limit before a position triggers automatic rebalancing?' },
+    { category: 'Investment Philosophy', name: 'Market Consistency', desc: 'Deploy systematic capital regularly regardless of asset cycles.', q: 'How do you suppress the instinct to time macroeconomic entry or exit points manually?' },
+    { category: 'Investment Philosophy', name: 'Asset Allocation', desc: 'Maintain clean balance across core uncorrelated layers.', q: 'Does your actual asset layout match your explicit strategic design rules right now?' },
+    { category: 'Investment Philosophy', name: 'Tax Efficiency', desc: 'Isolate maximum after-tax yield via precise location and tools.', q: 'What structural asset placement steps are you overlooking to shelter recurring gains?' },
+    { category: 'Investment Philosophy', name: 'Passive Income Development', desc: 'Construct income tracks independent of direct execution hours.', q: 'What system or network would safely automate income tracking away from your daily time input?' },
+    
+    { category: 'Behavioral Values', name: 'Emotional Control', desc: 'Execute financial logic cleanly; neutralize emotional reactions.', q: 'What specific historical transaction was driven by panic or greed—and what rule blocks a repeat?' },
+    { category: 'Behavioral Values', name: 'Patience', desc: 'Grant your investments space to compound safely without meddling.', q: 'What tracking habit or reporting loop is tempting you to break your structural strategy early?' },
+    { category: 'Behavioral Values', name: 'Adaptability', desc: 'Pivot asset deployment paths cleanly as variables shift.', q: 'If your primary thesis fails next month, what is your predefined operational fallback route?' },
+    { category: 'Behavioral Values', name: 'Integrity', desc: 'Generate capital through highly ethical, transparent means.', q: 'Does your current wealth architecture operate in absolute alignment with your ethical baselines?' },
+    { category: 'Behavioral Values', name: 'Gratitude', desc: 'Acknowledge your existing asset base while targeting growth.', q: 'How does checking current milestone achievements insulate you from status competition or excess risk?' },
+    { category: 'Behavioral Values', name: 'Purpose-Driven Wealth', desc: 'Lock financial milestones directly to personal life scope values.', q: 'If capital requirements were fully satisfied today, what primary purpose would direct your energy?' }
+  ];
+
+  let stage1Selected = [];
+  let stage2Selected = [];
+  let stage3Selected = [];
+  let currentStage = 1;
+
+  const container = document.getElementById('matrixContainer');
+  const counterText = document.getElementById('counterText');
+  const stepIndicator = document.getElementById('stepIndicator');
+  const promptsContainer = document.getElementById('promptsContainer');
+  const resetBtn = document.getElementById('resetBtn');
+
+  function renderMatrix() {
+    container.innerHTML = '';
+    const categories = [...new Set(financialValuesData.map(v => v.category))];
+    
+    categories.forEach(catName => {
+      const sect = document.createElement('div');
+      sect.className = 'category-section';
+      
+      const grid = document.createElement('div');
+      grid.className = 'matrix-grid';
+      
+      const catItems = financialValuesData.filter(v => v.category === catName);
+      let renderedInCat = 0;
+
+      catItems.forEach(item => {
+        const btn = document.createElement('button');
+        btn.className = 'fin-btn';
+        btn.innerHTML = `<strong>${item.name}</strong><span>${item.desc}</span>`;
+
+        if (currentStage === 1) {
+          const isSel = stage1Selected.includes(item.name);
+          if (isSel) btn.classList.add('selected-stage1');
+          if (!isSel && stage1Selected.length >= 12) btn.classList.add('disabled');
+
+          btn.addEventListener('click', () => {
+            if (isSel) {
+              stage1Selected = stage1Selected.filter(v => v !== item.name);
+            } else if (stage1Selected.length < 12) {
+              stage1Selected.push(item.name);
+            }
+            checkTransitions();
+            updateUI();
+          });
+          renderedInCat++;
+        }
+        else if (currentStage === 2) {
+          if (!stage1Selected.includes(item.name)) return;
+          const isSel = stage2Selected.includes(item.name);
+          if (isSel) btn.classList.add('selected-stage2');
+          if (!isSel && stage2Selected.length >= 6) btn.classList.add('disabled');
+
+          btn.addEventListener('click', () => {
+            if (isSel) {
+              stage2Selected = stage2Selected.filter(v => v !== item.name);
+            } else if (stage2Selected.length < 6) {
+              stage2Selected.push(item.name);
+            }
+            checkTransitions();
+            updateUI();
+          });
+          renderedInCat++;
+        }
+        else if (currentStage === 3) {
+          if (!stage2Selected.includes(item.name)) return;
+          const isSel = stage3Selected.includes(item.name);
+          if (isSel) btn.classList.add('selected-stage3');
+          if (!isSel && stage3Selected.length >= 3) btn.classList.add('disabled');
+
+          btn.addEventListener('click', () => {
+            if (isSel) {
+              stage3Selected = stage3Selected.filter(v => v !== item.name);
+            } else if (stage3Selected.length < 3) {
+              stage3Selected.push(item.name);
+            }
+            updateUI();
+          });
+          renderedInCat++;
+        }
+
+        grid.appendChild(btn);
+      });
+      
+      if (renderedInCat > 0) {
+        sect.innerHTML = `<div class="category-title">${catName}</div>`;
+        sect.appendChild(grid);
+        container.appendChild(sect);
+      }
+    });
+  }
+
+  function checkTransitions() {
+    if (stage1Selected.length === 12 && currentStage === 1) {
+      currentStage = 2;
+    } else if (stage1Selected.length < 12 && currentStage === 2) {
+      currentStage = 1;
+      stage2Selected = [];
+      stage3Selected = [];
+    } else if (stage2Selected.length === 6 && currentStage === 2) {
+      currentStage = 3;
+    } else if (stage2Selected.length < 6 && currentStage === 3) {
+      currentStage = 2;
+      stage3Selected = [];
+    }
+  }
+
+  window.resetFramework = function() {
+    stage1Selected = [];
+    stage2Selected = [];
+    stage3Selected = [];
+    currentStage = 1;
+    updateUI();
+  };
+
+  function updateUI() {
+    resetBtn.style.display = stage1Selected.length > 0 ? 'inline-block' : 'none';
+
+    if (currentStage === 1) {
+      stepIndicator.textContent = "Stage 1 — Select exactly 12 Capital Drivers";
+      counterText.innerHTML = `Selected: <strong>${stage1Selected.length} of 12</strong>`;
+    } else if (currentStage === 2) {
+      stepIndicator.textContent = "Stage 2 — Narrow your 12 down to 6 Priorities";
+      counterText.innerHTML = `Selected: <strong>${stage2Selected.length} of 6</strong>`;
+    } else if (currentStage === 3) {
+      stepIndicator.textContent = "Stage 3 — Isolate your Final Top 3 Anchors";
+      counterText.innerHTML = `Selected Core Anchors: <strong>${stage3Selected.length} of 3</strong>`;
+    }
+    
+    counterText.appendChild(resetBtn);
+    renderMatrix();
+    renderPrompts();
+  }
+
+  function renderPrompts() {
+    if (stage3Selected.length === 0) {
+      promptsContainer.innerHTML = `<div class="empty-state">Currently in Stage ${currentStage}. Complete filtration down to your top 3 anchors to view diagnostics.</div>`;
+      return;
+    }
+
+    promptsContainer.innerHTML = '';
+    stage3Selected.forEach((valName, i) => {
+      const match = financialValuesData.find(v => v.name === valName);
+      if (match) {
+        const card = document.createElement('div');
+        card.className = 'prompt-card';
+        card.innerHTML = `
+          <div class="prompt-header">Financial Anchor 0${i + 1} — ${match.name} (${match.category})</div>
+          <p class="prompt-q">${match.q}</p>
+          <textarea class="prompt-area" placeholder="Map out your execution configuration parameter..."></textarea>
+        `;
+        promptsContainer.appendChild(card);
+      }
+    });
+
+    if (stage3Selected.length === 3) {
+      const assetCard = document.createElement('div');
+      assetCard.className = 'prompt-card';
+      assetCard.style.borderLeftColor = 'var(--text-primary)';
+      assetCard.innerHTML = `
+        <div class="prompt-header" style="color:var(--text-primary)">Strategic Synthesis & Goal Convergence</div>
+        <p class="prompt-q">Looking at your financial anchors (${stage3Selected.join(', ')}), what precise milestones or systemic upgrades must be achieved over the next year to bring your actual deployment rules into harmony?</p>
+        <textarea class="prompt-area" placeholder="Define a clear timeline objective here..."></textarea>
+      `;
+      promptsContainer.appendChild(assetCard);
+    }
+  }
+
+  updateUI();
+
+  document.getElementById('fvForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    document.getElementById('fs_fv_anchors').value = stage3Selected.join(', ');
+    document.getElementById('fs_fv_stage1').value = stage1Selected.join(', ');
+    document.getElementById('fs_fv_stage2').value = stage2Selected.join(', ');
+    fetch(e.target.action, {
+      method: 'POST',
+      body: new FormData(e.target),
+      headers: { 'Accept': 'application/json' }
+    }).then(r => {
+      if (r.ok) document.getElementById('fvSuccess').style.display = 'block';
+    });
+  });
+})();
+</script>
+</body>
+</html>
