@@ -530,6 +530,83 @@
             }
         }
 
+
+        /* Dropdown Menu */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            cursor: pointer;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 12px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow-lg);
+            list-style: none;
+            min-width: 240px;
+            padding: 0.5rem 0;
+            z-index: 2000;
+            animation: fadeInDown 0.15s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+            to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 6px solid var(--border-color);
+        }
+
+        .dropdown-menu::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 6px solid var(--bg-white);
+        }
+
+        .dropdown-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.65rem 1.1rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-medium) !important;
+            text-decoration: none;
+            transition: background 0.15s, color 0.15s;
+            white-space: nowrap;
+        }
+
+        .dropdown-menu li a:hover {
+            background: #f4f5f0;
+            color: #6B7A3E !important;
+        }
+
+        .dropdown:hover .dropdown-menu,
+        .dropdown:focus-within .dropdown-menu {
+            display: block;
+        }
+
         /* Animations */
         @keyframes fadeInUp {
             from {
@@ -563,7 +640,15 @@
                 <li><a href="#research">Research</a></li>
                 <li><a href="#blog">Insights</a></li>
                 <li><a href="#contact">Contact</a></li>
-                <li><a href="https://xvrmazas.github.io/grounded-finance-tools/tools.html">Tools</a></li>
+                <li class="dropdown">
+                <a href="https://xvrmazas.github.io/grounded-finance-tools/tools.html" class="dropdown-toggle">Tools ▾</a>
+                <ul class="dropdown-menu">
+                  <li><a href="https://xvrmazas.github.io/grounded-finance-tools/grounded-finance-wheel.html" target="_blank">⚙️ Wheel of Life</a></li>
+                  <li><a href="https://xvrmazas.github.io/grounded-finance-tools/budget.html" target="_blank">📋 Financial Needs Assessment</a></li>
+                  <li><a href="https://xvrmazas.github.io/grounded-finance-tools/financial_values.html" target="_blank">💎 Financial Values Matrix</a></li>
+                  <li><a href="https://xvrmazas.github.io/grounded-finance-tools/life_values.html" target="_blank">🌱 Life Values Matrix</a></li>
+                </ul>
+              </li>
             </ul>
             <a href="https://calendar.app.google/4Kpaz2B1CGmTmh558" class="cta-button">Book Consultation</a>
         </nav>
