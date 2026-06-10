@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Free financial tools from Xavier Mazas — Wheel of Life assessment and Financial Needs Assessment to help you understand and organize your finances." />
+  <title>Tools — Xavier Mazas | Grounded Finance</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #7c3aed;
+      --text-dark: #1e293b;
+      --text-medium: #475569;
+      --text-light: #94a3b8;
+      --bg-white: #ffffff;
+      --bg-light: #f8fafc;
+      --bg-section: #f1f5f9;
+      --border: #e2e8f0;
+      --success: #059669;
+      --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-lg: 20px;
+    }
+
+    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: var(--text-dark); background: var(--bg-white); line-height: 1.6; }
+
+    /* ── HEADER ── */
+    .header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: var(--bg-white); border-bottom: 1px solid var(--border); padding: 0 2rem; height: 70px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-sm); }
+    .logo { font-size: 1.25rem; font-weight: 700; color: var(--text-dark); text-decoration: none; }
+    .nav { display: flex; align-items: center; gap: 2rem; }
+    .nav a { text-decoration: none; color: var(--text-medium); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+    .nav a:hover, .nav a.active { color: var(--primary); }
+    .nav-cta { background: var(--gradient); color: white !important; padding: 0.5rem 1.25rem; border-radius: 25px; font-weight: 600 !important; transition: opacity 0.2s !important; }
+    .nav-cta:hover { opacity: 0.9; }
+    @media (max-width: 768px) {
+      .nav { gap: 1rem; }
+      .nav a:not(.nav-cta) { display: none; }
+    }
+
+    /* ── HERO ── */
+    .hero { margin-top: 70px; background: var(--gradient); padding: 5rem 2rem 4rem; text-align: center; color: white; }
+    .hero-badge { display: inline-block; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.4rem 1rem; border-radius: 25px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 1.5rem; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; margin-bottom: 1rem; line-height: 1.2; }
+    .hero p { font-size: 1.1rem; opacity: 0.9; max-width: 600px; margin: 0 auto; line-height: 1.7; }
+
+    /* ── SECTION ── */
+    .section { padding: 5rem 2rem; }
+    .section-alt { background: var(--bg-light); }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-label { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--primary); margin-bottom: 0.75rem; }
+    .section-title { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 800; color: var(--text-dark); margin-bottom: 1rem; line-height: 1.2; }
+    .section-sub { font-size: 1.05rem; color: var(--text-medium); max-width: 620px; line-height: 1.7; }
+
+    /* ── TOOL CARDS ── */
+    .tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 3rem; }
+    @media (max-width: 768px) { .tools-grid { grid-template-columns: 1fr; } }
+
+    .tool-card { background: var(--bg-white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md); transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; }
+    .tool-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+
+    .tool-card-header { padding: 2rem 2rem 1.5rem; background: var(--gradient); color: white; }
+    .tool-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .tool-tag { display: inline-block; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.25rem 0.75rem; border-radius: 25px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.75rem; }
+    .tool-card-header h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .tool-card-header p { font-size: 0.9rem; opacity: 0.9; line-height: 1.6; }
+
+    .tool-card-body { padding: 1.75rem 2rem; flex: 1; display: flex; flex-direction: column; gap: 1.25rem; }
+    .tool-desc { font-size: 0.95rem; color: var(--text-medium); line-height: 1.7; }
+
+    .tool-features { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+    .tool-features li { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.9rem; color: var(--text-medium); }
+    .tool-features li::before { content: "✓"; color: var(--success); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+    .tool-time { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-light); padding-top: 0.5rem; border-top: 1px solid var(--border); }
+
+    .tool-btn { display: block; text-align: center; background: var(--gradient); color: white; text-decoration: none; padding: 0.85rem 1.5rem; border-radius: 25px; font-weight: 600; font-size: 0.95rem; transition: opacity 0.2s; margin-top: auto; }
+    .tool-btn:hover { opacity: 0.9; }
+
+    /* ── HOW IT WORKS ── */
+    .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem; }
+    @media (max-width: 768px) { .steps-grid { grid-template-columns: 1fr; } }
+
+    .step { text-align: center; padding: 2rem 1.5rem; background: var(--bg-white); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-sm); }
+    .step-num { width: 48px; height: 48px; background: var(--gradient); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 800; margin: 0 auto 1rem; }
+    .step h3 { font-size: 1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.5rem; }
+    .step p { font-size: 0.9rem; color: var(--text-medium); line-height: 1.6; }
+
+    /* ── CTA ── */
+    .cta { background: var(--gradient); padding: 5rem 2rem; text-align: center; color: white; }
+    .cta h2 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 800; margin-bottom: 1rem; }
+    .cta p { font-size: 1.05rem; opacity: 0.9; max-width: 550px; margin: 0 auto 2rem; line-height: 1.7; }
+    .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-white { background: white; color: var(--primary); text-decoration: none; padding: 0.85rem 2rem; border-radius: 25px; font-weight: 700; font-size: 0.95rem; transition: transform 0.2s; }
+    .btn-white:hover { transform: translateY(-2px); }
+    .btn-outline-white { border: 2px solid white; color: white; text-decoration: none; padding: 0.85rem 2rem; border-radius: 25px; font-weight: 600; font-size: 0.95rem; transition: background 0.2s; }
+    .btn-outline-white:hover { background: rgba(255,255,255,0.15); }
+
+    /* ── FOOTER ── */
+    .footer { background: #0f172a; color: #94a3b8; padding: 3rem 2rem 2rem; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 2rem; }
+    @media (max-width: 768px) { .footer-inner { grid-template-columns: 1fr 1fr; gap: 2rem; } }
+    .footer-brand { font-size: 1.1rem; font-weight: 700; color: white; margin-bottom: 0.75rem; }
+    .footer-tagline { font-size: 0.85rem; line-height: 1.6; }
+    .footer-col h4 { font-size: 0.85rem; font-weight: 600; color: white; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; }
+    .footer-col a { display: block; font-size: 0.85rem; color: #94a3b8; text-decoration: none; margin-bottom: 0.5rem; transition: color 0.2s; }
+    .footer-col a:hover { color: white; }
+    .footer-bottom { max-width: 1100px; margin: 0 auto; padding-top: 1.5rem; border-top: 1px solid #1e293b; font-size: 0.8rem; text-align: center; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <a href="https://website-sigma-livid-75.vercel.app/" class="logo">Xavier Mazas</a>
+    <nav class="nav">
+      <a href="https://website-sigma-livid-75.vercel.app/#about">About</a>
+      <a href="https://website-sigma-livid-75.vercel.app/#framework">Framework</a>
+      <a href="https://website-sigma-livid-75.vercel.app/#research">Research</a>
+      <a href="#" class="active">Tools</a>
+      <a href="https://website-sigma-livid-75.vercel.app/#contact">Contact</a>
+      <a href="https://calendar.app.google/4Kpaz2B1CGmTmh558" class="nav-cta">Book Consultation</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">Free Client Resources</div>
+    <h1>Financial Tools<br>That Actually Work for You</h1>
+    <p>Research-backed, trauma-informed tools designed for real people navigating real financial challenges. No jargon. No judgment. Just clarity.</p>
+  </section>
+
+  <!-- TOOLS -->
+  <section class="section">
+    <div class="container">
+      <p class="section-label">Interactive Tools</p>
+      <h2 class="section-title">Start Here</h2>
+      <p class="section-sub">These two tools are the foundation of every coaching engagement. Use them before your first session or anytime you need a clearer picture of where you stand.</p>
+
+      <div class="tools-grid">
+
+        <!-- Wheel of Life -->
+        <div class="tool-card">
+          <div class="tool-card-header">
+            <div class="tool-icon">⚙️</div>
+            <div class="tool-tag">Self-Assessment</div>
+            <h2>Wheel of Life</h2>
+            <p>Rate your satisfaction across 8 key life areas and see the full shape of your life balance at a glance.</p>
+          </div>
+          <div class="tool-card-body">
+            <p class="tool-desc">Most people manage problems in isolation. The Wheel of Life helps you see how financial stress connects to health, relationships, work, and every other area — so you can focus on what actually moves the needle.</p>
+            <ul class="tool-features">
+              <li>Rate 8 life areas on a 1–10 scale</li>
+              <li>Interactive wheel updates in real time</li>
+              <li>Reflection prompts for your lowest-rated area</li>
+              <li>7-day commitment builder included</li>
+              <li>Takes about 5 minutes to complete</li>
+            </ul>
+            <div class="tool-time">⏱ 5 minutes &nbsp;·&nbsp; No login required &nbsp;·&nbsp; Free</div>
+            <a href="https://xvrmazas.github.io/grounded-finance-tools/grounded-finance-wheel.html" class="tool-btn" target="_blank">Open Wheel of Life →</a>
+          </div>
+        </div>
+
+        <!-- Financial Needs Assessment -->
+        <div class="tool-card">
+          <div class="tool-card-header">
+            <div class="tool-icon">📋</div>
+            <div class="tool-tag">Financial Assessment</div>
+            <h2>Financial Needs Assessment</h2>
+            <p>Document your full monthly income and expenses to reveal your real financial picture — clearly and completely.</p>
+          </div>
+          <div class="tool-card-body">
+            <p class="tool-desc">You can't fix what you can't see. The Financial Needs Assessment gives every dollar a category and calculates your monthly net in real time — exposing gaps that surprise even people who think they know their finances.</p>
+            <ul class="tool-features">
+              <li>Covers all income sources including public benefits</li>
+              <li>Tracks 30+ expense categories</li>
+              <li>Live totals update as you type</li>
+              <li>Grand monthly net calculated automatically</li>
+              <li>Print or save as PDF when complete</li>
+            </ul>
+            <div class="tool-time">⏱ 10 minutes &nbsp;·&nbsp; No login required &nbsp;·&nbsp; Free</div>
+            <a href="https://xvrmazas.github.io/grounded-finance-tools/budget.html" class="tool-btn" target="_blank">Open Assessment →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section section-alt">
+    <div class="container">
+      <p class="section-label">How to Use These Tools</p>
+      <h2 class="section-title">A Simple Three-Step Process</h2>
+      <p class="section-sub">These tools work best when used together and in order. Here's how to get the most out of them.</p>
+
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h3>Start with the Wheel of Life</h3>
+          <p>Get an honest picture of where you are across all 8 life areas. This sets the context for everything that follows — including your finances.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h3>Complete the Financial Assessment</h3>
+          <p>Document every dollar coming in and going out. The live totals will show you your real monthly net — often for the first time.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h3>Bring Both to Your Session</h3>
+          <p>Your completed tools become the foundation of your first coaching conversation. No cold starts — we go straight to what matters.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <h2>Ready to Go Deeper?</h2>
+    <p>These tools give you clarity. A coaching session turns that clarity into a plan built around your actual life — not someone else's advice.</p>
+    <div class="cta-btns">
+      <a href="https://calendar.app.google/4Kpaz2B1CGmTmh558" class="btn-white">Book a Consultation</a>
+      <a href="https://website-sigma-livid-75.vercel.app/#framework" class="btn-outline-white">Learn My Framework</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand">Xavier Mazas</div>
+        <p class="footer-tagline">Trauma-informed financial coaching backed by academic economics research.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <a href="#">Individual Coaching</a>
+        <a href="#">Group Programs</a>
+        <a href="#">Corporate Training</a>
+        <a href="#">Speaking</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="#">Research Papers</a>
+        <a href="https://xvrmazas.github.io/grounded-finance-tools/grounded-finance-wheel.html">Wheel of Life</a>
+        <a href="https://xvrmazas.github.io/grounded-finance-tools/budget.html">Financial Assessment</a>
+        <a href="#">Blog</a>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <a href="#">LinkedIn</a>
+        <a href="#">YouTube</a>
+        <a href="#">Instagram</a>
+        <a href="#">Newsletter</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2025 Xavier Mazas. All rights reserved. | Trauma-Informed Financial Coaching
+    </div>
+  </footer>
+
+  <script>
+    window.addEventListener('scroll', function() {
+      const header = document.querySelector('.header');
+      if (window.scrollY > 100) {
+        header.style.background = 'rgba(255, 255, 255, 0.95)';
+        header.style.backdropFilter = 'blur(10px)';
+      } else {
+        header.style.background = 'var(--bg-white)';
+        header.style.backdropFilter = 'none';
+      }
+    });
+  </script>
+
+</body>
+</html>

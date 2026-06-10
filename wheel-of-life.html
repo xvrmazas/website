@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wheel of Life — Financial Fitness Coach</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #ffffff;
+      --bg2: #f9fafb;
+      --border: rgba(0,0,0,0.1);
+      --text-primary: #111827;
+      --text-secondary: #6b7280;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #111827;
+        --bg2: #1f2937;
+        --border: rgba(255,255,255,0.1);
+        --text-primary: #f9fafb;
+        --text-secondary: #9ca3af;
+      }
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg2);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 2rem 1rem 4rem;
+    }
+
+    .card {
+      background: var(--bg);
+      border-radius: var(--radius-lg);
+      border: 0.5px solid var(--border);
+      padding: 2.5rem 2rem 2rem;
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .wol-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 32px;
+      text-align: center;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .wol-sub {
+      font-size: 13px;
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 1.75rem;
+      line-height: 1.6;
+    }
+
+    .wol-canvas {
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+      touch-action: none;
+      cursor: crosshair;
+    }
+
+    .wol-score {
+      text-align: center;
+      margin: 1rem 0 1.5rem;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .wol-score strong {
+      color: var(--text-primary);
+      font-size: 22px;
+      font-weight: 500;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .wol-sliders {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 28px;
+    }
+
+    @media (max-width: 420px) {
+      .wol-sliders { grid-template-columns: 1fr; }
+    }
+
+    .wol-slider-row { display: flex; flex-direction: column; gap: 5px; }
+
+    .wol-label {
+      font-size: 12px;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .wol-label .val {
+      font-weight: 400;
+      color: var(--text-secondary);
+      font-size: 12px;
+      min-width: 16px;
+      text-align: right;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--border);
+      outline: none;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--thumb-color, #3B82F6);
+      border: 2px solid var(--bg);
+      box-shadow: 0 0 0 1px var(--thumb-color, #3B82F6);
+      cursor: pointer;
+    }
+
+    input[type=range]::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--thumb-color, #3B82F6);
+      border: 2px solid var(--bg);
+      box-shadow: 0 0 0 1px var(--thumb-color, #3B82F6);
+      cursor: pointer;
+    }
+
+    .divider {
+      border: none;
+      border-top: 0.5px solid var(--border);
+      margin: 1.75rem 0 1.25rem;
+    }
+
+    .wol-reset {
+      display: block;
+      margin: 1.25rem auto 0;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      background: none;
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 7px 20px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .wol-reset:hover { background: var(--bg2); }
+
+    .ffc-badge {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 11px;
+      color: var(--text-secondary);
+      letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1 class="wol-title">Wheel of Life</h1>
+    <p class="wol-sub">Rate your current satisfaction in each area on a scale from 1–10.<br>Use the sliders below or click directly on the wheel.</p>
+
+    <canvas class="wol-canvas" id="wol" width="380" height="380"></canvas>
+
+    <div class="wol-score">
+      Overall balance score
+      <strong id="score">—</strong>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="wol-sliders" id="sliders"></div>
+
+    <button class="wol-reset" id="reset">Reset all to 5</button>
+
+    <p class="ffc-badge">Financial Fitness Coach</p>
+  </div>
+
+  <script>
+    const cats = [
+      { label: 'Finances',        color: '#3B82F6' },
+      { label: 'Relationships',   color: '#10B981' },
+      { label: 'Health',          color: '#F59E0B' },
+      { label: 'Fun',             color: '#EF4444' },
+      { label: 'Home',            color: '#8B5CF6' },
+      { label: 'Personal Growth', color: '#06B6D4' },
+      { label: 'Work',            color: '#EC4899' },
+      { label: 'Other',           color: '#6B7280' },
+    ];
+
+    const N = cats.length;
+    const vals = cats.map(() => 5);
+    const canvas = document.getElementById('wol');
+    const ctx = canvas.getContext('2d');
+    const CX = 190, CY = 190, R = 160;
+
+    function isDark() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const dark = isDark();
+      const bgLine  = dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.07)';
+      const bgLineStrong = dark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.15)';
+      const labelColor = dark ? '#e5e7eb' : '#374151';
+      const fillColor = 'rgba(59,130,246,0.12)';
+
+      // Rings
+      for (let ring = 1; ring <= 10; ring++) {
+        const r = (ring / 10) * R;
+        ctx.beginPath();
+        ctx.arc(CX, CY, r, 0, Math.PI * 2);
+        ctx.strokeStyle = ring === 10 ? bgLineStrong : bgLine;
+        ctx.lineWidth = ring === 10 ? 1 : 0.5;
+        ctx.stroke();
+      }
+
+      // Spokes
+      for (let i = 0; i < N; i++) {
+        const angle = (i / N) * Math.PI * 2 - Math.PI / 2;
+        ctx.beginPath();
+        ctx.moveTo(CX, CY);
+        ctx.lineTo(CX + Math.cos(angle) * R, CY + Math.sin(angle) * R);
+        ctx.strokeStyle = bgLine;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+
+      // Filled polygon
+      ctx.beginPath();
+      for (let i = 0; i < N; i++) {
+        const angle = (i / N) * Math.PI * 2 - Math.PI / 2;
+        const r = (vals[i] / 10) * R;
+        const x = CX + Math.cos(angle) * r;
+        const y = CY + Math.sin(angle) * r;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.fillStyle = fillColor;
+      ctx.fill();
+      ctx.strokeStyle = '#3B82F6';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Dots on each spoke
+      for (let i = 0; i < N; i++) {
+        const angle = (i / N) * Math.PI * 2 - Math.PI / 2;
+        const r = (vals[i] / 10) * R;
+        const x = CX + Math.cos(angle) * r;
+        const y = CY + Math.sin(angle) * r;
+        ctx.beginPath();
+        ctx.arc(x, y, 5.5, 0, Math.PI * 2);
+        ctx.fillStyle = cats[i].color;
+        ctx.fill();
+        ctx.strokeStyle = dark ? '#111827' : '#ffffff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+
+      // Labels
+      ctx.font = '500 12px "DM Sans", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      for (let i = 0; i < N; i++) {
+        const angle = (i / N) * Math.PI * 2 - Math.PI / 2;
+        const labelR = R + 24;
+        const lx = CX + Math.cos(angle) * labelR;
+        const ly = CY + Math.sin(angle) * labelR;
+        ctx.fillStyle = labelColor;
+        const words = cats[i].label.split(' ');
+        if (words.length === 1) {
+          ctx.fillText(words[0], lx, ly);
+        } else {
+          ctx.fillText(words[0], lx, ly - 7);
+          ctx.fillText(words[1], lx, ly + 7);
+        }
+      }
+
+      // Score
+      const avg = (vals.reduce((a, b) => a + b, 0) / N).toFixed(1);
+      document.getElementById('score').textContent = avg + ' / 10';
+    }
+
+    function buildSliders() {
+      const container = document.getElementById('sliders');
+      container.innerHTML = '';
+      cats.forEach((cat, i) => {
+        const row = document.createElement('div');
+        row.className = 'wol-slider-row';
+
+        const lbl = document.createElement('div');
+        lbl.className = 'wol-label';
+        lbl.innerHTML = `<span style="color:${cat.color}">${cat.label}</span><span class="val" id="val-${i}">${vals[i]}</span>`;
+
+        const inp = document.createElement('input');
+        inp.type = 'range';
+        inp.min = 1; inp.max = 10; inp.step = 1; inp.value = vals[i];
+        inp.style.setProperty('--thumb-color', cat.color);
+        inp.addEventListener('input', e => {
+          vals[i] = +e.target.value;
+          document.getElementById(`val-${i}`).textContent = vals[i];
+          draw();
+        });
+
+        row.appendChild(lbl);
+        row.appendChild(inp);
+        container.appendChild(row);
+      });
+    }
+
+    canvas.addEventListener('click', function(e) {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const mx = (e.clientX - rect.left) * scaleX;
+      const my = (e.clientY - rect.top) * scaleX;
+      const dx = mx - CX, dy = my - CY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist > R + 10 || dist < 4) return;
+
+      let angle = Math.atan2(dy, dx) + Math.PI / 2;
+      if (angle < 0) angle += Math.PI * 2;
+      const sector = Math.round(angle / (Math.PI * 2 / N)) % N;
+      const newVal = Math.max(1, Math.min(10, Math.round((dist / R) * 10)));
+
+      vals[sector] = newVal;
+      const sliderRow = document.querySelector(`#sliders .wol-slider-row:nth-child(${sector + 1}) input`);
+      if (sliderRow) sliderRow.value = newVal;
+      document.getElementById(`val-${sector}`).textContent = newVal;
+      draw();
+    });
+
+    document.getElementById('reset').addEventListener('click', () => {
+      for (let i = 0; i < N; i++) vals[i] = 5;
+      buildSliders();
+      draw();
+    });
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', draw);
+
+    buildSliders();
+    draw();
+  </script>
+</body>
+</html>

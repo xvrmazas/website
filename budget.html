@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Financial Needs Assessment — Grounded Finance</title>
+</head>
+<body>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #ffffff; --bg2: #f3f4f6; --bg3: #e5e7eb;
+  --border: rgba(0,0,0,0.09); --border-strong: rgba(0,0,0,0.18);
+  --text-primary: #111827; --text-secondary: #6b7280; --text-tertiary: #9ca3af;
+  --success: #059669; --danger: #dc2626;
+  --accent: #2E6DA4; --accent-light: #EBF2FA;
+  --radius-md: 8px; --radius-lg: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111827; --bg2: #1a2233; --bg3: #243046;
+    --border: rgba(255,255,255,0.09); --border-strong: rgba(255,255,255,0.18);
+    --text-primary: #f9fafb; --text-secondary: #9ca3af; --text-tertiary: #6b7280;
+    --success: #34d399; --danger: #f87171;
+    --accent: #60a5fa; --accent-light: #1e3a5f;
+  }
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--bg2); color: var(--text-primary); min-height: 100vh; padding: 2rem 1rem 4rem; }
+.fna-page { max-width: 100%; margin: 0 auto; }
+.fna-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
+.fna-brand { font-size: 14px; font-weight: 500; letter-spacing: 0.1em; color: var(--accent); text-transform: uppercase; text-align: center; margin-bottom: 4px; }
+.fna-title { font-size: 34px; font-weight: 500; text-align: center; color: var(--text-primary); margin-bottom: 6px; }
+.fna-sub { font-size: 16px; color: var(--text-secondary); line-height: 1.65; text-align: center; margin-bottom: 1.25rem; }
+.fna-date-row { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 1.5rem; }
+.fna-date-row label { font-size: 16px; color: var(--text-secondary); }
+.fna-date-row input { max-width: 180px; font-size: 16px; padding: 6px 10px; border: 0.5px solid var(--border-strong); border-radius: var(--radius-md); background: var(--bg); color: var(--text-primary); outline: none; }
+.fna-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }
+@media (max-width: 700px) { .fna-grid { grid-template-columns: 1fr; } }
+.fna-col { display: flex; flex-direction: column; gap: 1.25rem; }
+.fna-section { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; overflow: hidden; min-width: 0; }
+.fna-section-title { font-size: 14px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.07em; margin: 0 0 10px; padding-bottom: 8px; border-bottom: 0.5px solid var(--border); }
+.fna-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.fna-row label { font-size: 16px; color: var(--text-secondary); flex: 1; min-width: 0; overflow-wrap: break-word; word-break: normal; line-height: 1.4; }
+.fna-row input[type=number] { width: 120px; text-align: right; font-size: 16px; padding: 5px 8px; border: 0.5px solid var(--border-strong); border-radius: var(--radius-md); background: var(--bg); color: var(--text-primary); outline: none; -moz-appearance: textfield; }
+.fna-row input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+.fna-row input[type=text] { width: 120px; font-size: 16px; padding: 5px 8px; border: 0.5px solid var(--border-strong); border-radius: var(--radius-md); background: var(--bg); color: var(--text-primary); outline: none; }
+.fna-row input:focus { border-color: var(--accent); }
+.fna-note { font-size: 14px; color: var(--text-tertiary); margin: -4px 0 8px 0; }
+.fna-total-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 0.5px solid var(--border); }
+.fna-total-row span { font-size: 16px; font-weight: 500; color: var(--text-primary); }
+.fna-grand { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 1.5rem; background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
+@media (max-width: 500px) { .fna-grand { grid-template-columns: 1fr; } }
+.fna-metric { text-align: center; }
+.fna-metric-label { font-size: 16px; color: var(--text-secondary); margin-bottom: 4px; }
+.fna-metric-val { font-size: 26px; font-weight: 500; color: var(--text-primary); }
+.fna-metric-val.positive { color: var(--success); }
+.fna-metric-val.negative { color: var(--danger); }
+.fna-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 1.5rem; }
+@media (max-width: 500px) { .fna-bottom { grid-template-columns: 1fr; } }
+.fna-bottom-full { margin-top: 1.25rem; }
+.fna-field-label { font-size: 14px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+textarea { width: 100%; min-height: 80px; font-size: 16px; padding: 8px 10px; border: 0.5px solid var(--border-strong); border-radius: var(--radius-md); background: var(--bg); color: var(--text-primary); resize: vertical; outline: none; font-family: 'DM Sans', sans-serif; }
+textarea:focus { border-color: var(--accent); }
+.fna-sig input { width: 100%; font-size: 16px; padding: 7px 10px; border: 0.5px solid var(--border-strong); border-radius: var(--radius-md); background: var(--bg); color: var(--text-primary); outline: none; }
+.fna-sig input:focus { border-color: var(--accent); }
+.print-btn { display: block; margin: 1.5rem auto 0; font-family: 'DM Sans', sans-serif; font-size: 16px; background: none; border: 0.5px solid var(--border-strong); border-radius: var(--radius-md); padding: 8px 20px; color: var(--text-secondary); cursor: pointer; }
+.print-btn:hover { background: var(--bg2); }
+.fna-footer { text-align: center; font-size: 14px; color: var(--text-tertiary); margin-top: 1.5rem; letter-spacing: 0.04em; }
+@media print {
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { background: white !important; padding: 0 !important; margin: 0 !important; font-size: 11px !important; }
+  .print-btn { display: none !important; }
+  .fna-page { max-width: 100% !important; padding: 0 !important; }
+  .fna-card { border: none !important; padding: 0.5rem !important; }
+  .fna-brand { font-size: 10px !important; }
+  .fna-title { font-size: 18px !important; margin-bottom: 4px !important; }
+  .fna-sub { font-size: 10px !important; margin-bottom: 8px !important; }
+  .fna-date-row { margin-bottom: 8px !important; }
+  .fna-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 0.5rem !important; }
+  .fna-col { display: flex !important; flex-direction: column !important; gap: 0.5rem !important; }
+  .fna-section { padding: 0.5rem !important; border: 0.5px solid #ccc !important; border-radius: 4px !important; break-inside: avoid !important; page-break-inside: avoid !important; }
+  .fna-section-title { font-size: 9px !important; margin-bottom: 6px !important; padding-bottom: 4px !important; }
+  .fna-row { margin-bottom: 3px !important; }
+  .fna-row label { font-size: 10px !important; }
+  .fna-row input[type=number], .fna-row input[type=text] { font-size: 10px !important; width: 80px !important; padding: 2px 4px !important; border: 0.5px solid #ccc !important; border-radius: 2px !important; }
+  .fna-total-row { padding-top: 4px !important; margin-top: 4px !important; }
+  .fna-total-row span { font-size: 10px !important; }
+  .fna-grand { display: grid !important; grid-template-columns: 1fr 1fr 1fr !important; gap: 0.5rem !important; padding: 0.5rem !important; margin-top: 0.5rem !important; border: 0.5px solid #ccc !important; }
+  .fna-metric-label { font-size: 9px !important; }
+  .fna-metric-val { font-size: 14px !important; }
+  .fna-bottom-full { margin-top: 0.5rem !important; }
+  .fna-bottom { gap: 0.5rem !important; margin-top: 0.5rem !important; }
+  textarea { font-size: 10px !important; min-height: 40px !important; border: 0.5px solid #ccc !important; }
+  .fna-sig input { font-size: 10px !important; border: 0.5px solid #ccc !important; }
+  .fna-footer { font-size: 9px !important; margin-top: 0.5rem !important; }
+  .fna-note { font-size: 9px !important; }
+}
+</style>
+
+<div class="fna-page">
+<div class="fna-card">
+  <p class="fna-brand">Grounded Finance</p>
+  <h1 class="fna-title">Financial Needs Assessment</h1>
+  <p class="fna-sub">Document your NET monthly income and expenses. Only report income used to cover monthly expenses.<br>If an amount is yearly, divide by 12. Provide information relative to today's date.</p>
+  <div class="fna-date-row"><label>Date:</label><input type="date" id="fna-date" /></div>
+
+  <div class="fna-grid">
+    <div class="fna-col">
+
+      <div class="fna-section">
+        <p class="fna-section-title">Private income</p>
+        <p class="fna-note">Wages (net)</p>
+        <div class="fna-row"><label>Self</label><input type="number" class="inc" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Spouse</label><input type="number" class="inc" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Other</label><input type="number" class="inc" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Wages end on</label><input type="text" placeholder="MM/DD/YYYY" /></div>
+        <div class="fna-row"><label>Small business</label><input type="number" class="inc" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Rental property</label><input type="number" class="inc" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Alimony</label><input type="number" class="inc" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Child support</label><input type="number" class="inc" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Severance</label><input type="number" class="inc" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Severance ends on</label><input type="text" placeholder="MM/DD/YYYY" /></div>
+        <div class="fna-row"><label>Pension</label><input type="number" class="inc" placeholder="0" min="0" /></div>
+        <div class="fna-total-row"><span>Total</span><span id="t-private">$0</span></div>
+      </div>
+
+      <div class="fna-section">
+        <p class="fna-section-title">Public income</p>
+        <div class="fna-row"><label>Unemployment</label><input type="number" class="inc" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>UI exhausts on</label><input type="text" placeholder="MM/DD/YYYY" /></div>
+        <div class="fna-row"><label>Workers comp</label><input type="number" class="inc" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Social security</label><input type="number" class="inc" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Veterans benefits</label><input type="number" class="inc" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>TANF</label><input type="number" class="inc" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>General assistance</label><input type="number" class="inc" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>CalFRESH</label><input type="number" class="inc" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>SSI/SSDI</label><input type="number" class="inc" placeholder="0" min="0" /></div>
+        <div class="fna-total-row"><span>Total</span><span id="t-public">$0</span></div>
+      </div>
+
+      <div class="fna-section">
+        <p class="fna-section-title">Financial aid</p>
+        <p class="fna-note">Divide package by semester/term — no 3rd party</p>
+        <div class="fna-row"><label>Pell grant</label><input type="number" class="inc" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Grants</label><input type="number" class="inc" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Work study</label><input type="number" class="inc" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Scholarships</label><input type="number" class="inc" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Other</label><input type="number" class="inc" placeholder="0" min="0" /></div>
+        <div class="fna-total-row"><span>Total</span><span id="t-aid">$0</span></div>
+      </div>
+
+      <div class="fna-section">
+        <p class="fna-section-title">Miscellaneous income</p>
+        <div class="fna-row"><label>Other</label><input type="number" class="inc" placeholder="0" min="0" /></div>
+        <div class="fna-total-row"><span>Total</span><span id="t-misc-inc">$0</span></div>
+      </div>
+
+      <div class="fna-section">
+        <p class="fna-section-title">Comments</p>
+        <textarea placeholder="Note any amounts that will change in the future or any other relevant information..." style="min-height:120px;"></textarea>
+      </div>
+
+    </div>
+    <div class="fna-col">
+
+      <div class="fna-section">
+        <p class="fna-section-title">Household</p>
+        <div class="fna-row"><label>Mortgage/Rent</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Rental arrears</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Insurance taxes</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Utilities – Gas/DWP</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Utility arrears</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Phone/Internet/Cable</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Maintenance/Repairs</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Food/Supplies</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Clothing</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-total-row"><span>Total</span><span id="t-household">$0</span></div>
+      </div>
+
+      <div class="fna-section">
+        <p class="fna-section-title">Transportation</p>
+        <div class="fna-row"><label>Vehicle payment(s)</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Vehicle insurance</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Vehicle license(s)</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Vehicle maintenance</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Gasoline</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Public transportation</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-total-row"><span>Total</span><span id="t-transport">$0</span></div>
+      </div>
+
+      <div class="fna-section">
+        <p class="fna-section-title">Health/Life</p>
+        <div class="fna-row"><label>Health insurance</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Life insurance</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Health care bills</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Dental/Vision bills</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Prescriptions</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-total-row"><span>Total</span><span id="t-health">$0</span></div>
+      </div>
+
+      <div class="fna-section">
+        <p class="fna-section-title">Miscellaneous expenses</p>
+        <div class="fna-row"><label>Alimony</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Child support</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Day care</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Entertainment</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Credit card payments</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Subscriptions/Dues</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Gifts/Postage/Cards</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Hair cuts/Care</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Donations</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Tuition/Board/Fees</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Pets</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-row"><label>Other</label><input type="number" class="exp" placeholder="0" min="0" /></div>
+        <div class="fna-total-row"><span>Total</span><span id="t-misc-exp">$0</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="fna-grand">
+    <div class="fna-metric"><div class="fna-metric-label">Grand monthly income</div><div class="fna-metric-val" id="grand-inc">$0</div></div>
+    <div class="fna-metric"><div class="fna-metric-label">Grand monthly expenses</div><div class="fna-metric-val" id="grand-exp">$0</div></div>
+    <div class="fna-metric"><div class="fna-metric-label">Monthly net (unmet needs)</div><div class="fna-metric-val" id="grand-net">$0</div></div>
+  </div>
+
+
+
+  <div class="fna-bottom">
+    <div class="fna-section fna-sig"><p class="fna-section-title">Client name</p><input type="text" placeholder="Full name" /></div>
+    <div class="fna-section fna-sig"><p class="fna-section-title">Client signature</p><input type="text" placeholder="Type full name as signature" /></div>
+  </div>
+
+  <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+</div>
+<p class="fna-footer">Grounded Finance &nbsp;·&nbsp; groundedfinance.com</p>
+</div>
+
+<script>
+(function(){
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('fna-date').value = today;
+  function fmt(n){ return '$' + Math.round(n).toLocaleString(); }
+  function recalc(){
+    const incSections = document.querySelectorAll('.fna-col:first-child .fna-section');
+    const expSections = document.querySelectorAll('.fna-col:last-child .fna-section');
+    const incIds = ['t-private','t-public','t-aid','t-misc-inc'];
+    const expIds = ['t-household','t-transport','t-health','t-misc-exp'];
+    let totalInc = 0, totalExp = 0;
+    incSections.forEach((sec,i)=>{
+      let t=0; sec.querySelectorAll('.inc').forEach(el=>t+=parseFloat(el.value)||0);
+      totalInc+=t; const el=document.getElementById(incIds[i]); if(el) el.textContent=fmt(t);
+    });
+    expSections.forEach((sec,i)=>{
+      let t=0; sec.querySelectorAll('.exp').forEach(el=>t+=parseFloat(el.value)||0);
+      totalExp+=t; const el=document.getElementById(expIds[i]); if(el) el.textContent=fmt(t);
+    });
+    document.getElementById('grand-inc').textContent=fmt(totalInc);
+    document.getElementById('grand-exp').textContent=fmt(totalExp);
+    const net=totalInc-totalExp;
+    const netEl=document.getElementById('grand-net');
+    netEl.textContent=fmt(net);
+    netEl.className='fna-metric-val'+(net>=0?' positive':' negative');
+  }
+  document.querySelectorAll('.inc,.exp').forEach(el=>el.addEventListener('input',recalc));
+  recalc();
+})();
+</script>
+</body>
+</html>
